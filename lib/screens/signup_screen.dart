@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezenty_card_app/bloc/auth_bloc.dart';
 import 'package:prezenty_card_app/models/user_signup_response.dart';
+import 'package:prezenty_card_app/screens/login_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
 import 'package:prezenty_card_app/utils/shared_prefs.dart';
 import 'package:prezenty_card_app/utils/string_validator.dart';
@@ -378,8 +379,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else if (password != rePassword) {
       _validationFailed('Password mismatch', _textFieldControlRePassword);
     }
-    return await _signUp(
+    else {
+      _signUp(
         name, storeId, empId, email, phone, password, rePassword);
+    }
   }
 
   _validationFailed(
@@ -390,9 +393,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     textFieldControl.focusNode.requestFocus();
   }
 
-  Future _signUp(String name, String storeId, String empId, String email,
+  Future<void> _signUp(String name, String storeId, String empId, String email,
       String phone, String password, String rePassword) async {
-    print("Sign Up--Api");
+
     AppDialogs.loading();
 
     Map<String, dynamic> body = {};
@@ -403,25 +406,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     body["phone"] = phone;
     body["password"] = password;
     body["password_confirmation"] = rePassword;
+
     try {
-      print("inside try");
       UserSignupResponse response =
-          await _authBloc.userRegistration(json.encode(body));
-      print("responsee in screen=>${response}");
-      if (response.statusCode == 200||response.statusCode == 422) {
-        print("if");
+      await _authBloc.userRegistration(json.encode(body));
+      Get.back();
+      if (response.success!) {
         toastMessage('${response.message}');
-        Get.back();
         await SharedPrefs.logIn(response);
+        Get.offAll(() => LoginScreen());
       } else {
-        print("Error");
-        Get.back();
-        toastMessage('${response.message}');
+        toastMessage("${response.message}");
       }
     } catch (e) {
-      print("ghjghgj");
       Get.back();
       toastMessage('Something went wrong. Please try again');
     }
   }
+
 }

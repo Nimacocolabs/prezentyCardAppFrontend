@@ -6,6 +6,7 @@ import 'package:prezenty_card_app/screens/about_contact_screen.dart';
 import 'package:prezenty_card_app/screens/home_screen.dart';
 import 'package:prezenty_card_app/screens/profile_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/utils/shared_prefs.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -82,6 +83,37 @@ final items=<Widget>[
               ),
             ),
           ),
+          IconButton(onPressed: (){
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  content: Text(
+                    'Are you sure want to log out?',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  actions: [
+                    OutlinedButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        Get.back();
+                      },
+                    ),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    ElevatedButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        Get.back();
+                        SharedPrefs.logOut();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }, icon: Icon(Icons.logout)),
         ],
         title: Text(appBarTitle[_selectedIndex],
               style: TextStyle(

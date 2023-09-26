@@ -25,7 +25,11 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(systemOverlayStyle: SystemUiOverlayStyle.dark), colorScheme: ColorScheme.fromSwatch(primarySwatch: primaryColor).copyWith(secondary: secondaryColor)),
-      home:  SplashScreen(),
+      routes: {
+        '/': (BuildContext context) => SplashScreen(),
+        //'/home': (BuildContext context) => MyHomePage(),
+      },
+      initialRoute: '/',
     );
   }
 }

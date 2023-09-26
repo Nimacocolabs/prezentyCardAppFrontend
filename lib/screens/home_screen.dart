@@ -1,8 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:prezenty_card_app/bloc/card_bloc.dart';
+import 'package:prezenty_card_app/models/card_fetch_reponse.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/widgets/app_dailogs.dart';
 import 'package:prezenty_card_app/widgets/app_text_box.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,18 +18,26 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   TextFieldControl _textFieldControlCardNumber = TextFieldControl();
-  int? typedCardNumber;
+  CardBloc _bloc = CardBloc();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.04,),
+        padding: EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.04,
+              ),
               Text(""),
               Center(
                 child: Text(
@@ -32,75 +45,80 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                 ),
               ),
-          SizedBox(height: 20,),
-          Text(
-              'Card Number',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w500
+              SizedBox(
+                height: 20,
               ),
-          ),
-          // TextFormField(
-          //   controller:
-          //   _textFieldControlCardNumber.controller,
-          //   maxLength: 6,
-          //   keyboardType: TextInputType.number,
-          //   autovalidateMode:
-          //   AutovalidateMode.onUserInteraction,
-          //   onChanged: (value) =>
-          //   typedCardNumber = int.parse(value),
-          //   inputFormatters: [
-          //     LengthLimitingTextInputFormatter(6),
-          //     FilteringTextInputFormatter.digitsOnly
-          //   ],
-          //   validator: (value) {
-          //     return value!.isEmpty || value.length != 6
-          //         ? "Enter the last 6 didgits of your card"
-          //         : null;
-          //   },
-          // ),
-          SizedBox(height: 10,),
-          AppTextBox(
-              textFieldControl: _textFieldControlCardNumber,
-              prefixIcon: Icon(Icons.credit_card),
-              hintText: 'Card number',
-              keyboardType: TextInputType.number,
-          ),
-          SizedBox(height: 20,),
-          Center(
-              child: Material(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                color: primaryColor,
-                child: InkWell(
-                  borderRadius:
-                  const BorderRadius.all(Radius.circular(8)),
-                  child: Container(
-                    width: 150,
-                    padding: EdgeInsets.all(14),
-                    child: Center(
-                      child: Text(
-                        'Submit',
-                        style:
-                        TextStyle(color: Colors.white, fontSize: 16),
+              Text(
+                'Card Number',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              AppTextBox(
+                textFieldControl: _textFieldControlCardNumber,
+                prefixIcon: Icon(Icons.credit_card),
+                hintText: 'Card number',
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: Material(
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  color: primaryColor,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    child: Container(
+                      width: 150,
+                      padding: EdgeInsets.all(14),
+                      child: Center(
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                       ),
                     ),
+                    onTap: () {
+                      _sumbit();
+                      // Get.back();
+                    },
                   ),
-                  onTap:(){
-                    // Get.back();
-                  },
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
+              buildCardDetails(),
+            ],
           ),
-          SizedBox(height: 20,),
-          buildCardDetails(),
-        ],
-      ),
-            ),
-          )),
+        ),
+      )),
     );
   }
-  buildCardDetails( ) {
+
+  Future _sumbit() async {
+    AppDialogs.loading();
+    String card_number = _textFieldControlCardNumber.controller.text.trim();
+    try {
+      CardFetchResponse response = await _bloc.getCardDeatils(card_number);
+      if (response.status == true) {
+        toastMessage('submitted');
+      } else {
+        toastMessage('${response.message!}');
+      }
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      Get.back();
+      toastMessage('Something went wrong. Please try again');
+    }
+  }
+
+  buildCardDetails() {
     return Container(
       alignment: FractionalOffset.center,
       padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -125,18 +143,52 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-           Center(child: Text("Our card details ",style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20,color: Colors.white),)),
-            SizedBox(height: 20,),
-            Text("Name : ",style: TextStyle(color: Colors.white),),
-            SizedBox(height: 15,),
-            Text("Card Number :",style: TextStyle(color: Colors.white),),
-            SizedBox(height: 15,),
-            Text("CVV :",style: TextStyle(color: Colors.white),),
-            SizedBox(height: 15,),
-            Text("ExpiryMonth/expiryYear :",style: TextStyle(color: Colors.white),),
-            SizedBox(height: 15,),
-            Text("Type :",style: TextStyle(color: Colors.white),),
-            SizedBox(height: 15,),
+            Center(
+                child: Text(
+              "Our card details ",
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.white),
+            )),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Name : ",
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "Card Number :",
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "CVV :",
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "ExpiryMonth/expiryYear :",
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              "Type :",
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              height: 15,
+            ),
           ],
         ),
       ),
