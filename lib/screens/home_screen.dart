@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   TextFieldControl _textFieldControlCardNumber = TextFieldControl();
   CardBloc _bloc = CardBloc();
+  CardFetchResponse? _cardResponse;
 
   @override
   void initState() {
@@ -83,9 +84,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    onTap: () {
-                      _sumbit();
-                      // Get.back();
+                    onTap: () async{
+                      String card_number = _textFieldControlCardNumber.controller.text.trim();
+                      try {
+                        CardFetchResponse response = await _bloc.getCardDeatils(card_number);
+                        if (response.status == true) {
+                          print("Response ${response.card!.email}");
+                          setState(() {
+                            _cardResponse = response;
+                          });
+                          toastMessage('submitted');
+                        } else {
+                          toastMessage('${response.message!}');
+                        }
+                      } catch (e, s) {
+                        Completer().completeError(e, s);
+                        Get.back();
+                        toastMessage('Something went wrong. Please try again');
+                      }
                     },
                   ),
                 ),
@@ -100,98 +116,93 @@ class _HomeScreenState extends State<HomeScreen> {
       )),
     );
   }
-
-  Future _sumbit() async {
-    AppDialogs.loading();
-    String card_number = _textFieldControlCardNumber.controller.text.trim();
-    try {
-      CardFetchResponse response = await _bloc.getCardDeatils(card_number);
-      if (response.status == true) {
-        toastMessage('submitted');
-      } else {
-        toastMessage('${response.message!}');
-      }
-    } catch (e, s) {
-      Completer().completeError(e, s);
-      Get.back();
-      toastMessage('Something went wrong. Please try again');
+  buildCardDetails() {
+    if (_cardResponse != null) {
+      final card = _cardResponse!.card;
+      return Container(
+        alignment: FractionalOffset.center,
+        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+        margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
+        decoration: BoxDecoration(
+            color: secondaryColor,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 3,
+                blurRadius: 4,
+                offset: Offset(0, 2), // changes position of shadow
+              ),
+            ]),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Center(
+                  child: Text(
+                    "Our card details ",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                        color: Colors.white),
+                  )),
+              SizedBox(
+                height: 20,
+              ),
+              Text(
+                "Name : ${card?.userName ?? 'N/A'}",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Card Number : ${card?.cardNumber ?? 'N/A'}",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Phone : ${card?.phone ?? 'N/A'}",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Email : ${card?.email ?? 'N/A'}",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Issued date : ${card?.issuedDate ?? 'N/A'}",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                "Type :  ${card?.type ?? 'N/A'}",
+                style: TextStyle(color: Colors.white),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Container(); // Return an empty container if there is no data yet.
     }
   }
 
-  buildCardDetails() {
-    return Container(
-      alignment: FractionalOffset.center,
-      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-      margin: EdgeInsets.fromLTRB(5, 5, 5, 0),
-      decoration: BoxDecoration(
-          color: secondaryColor,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
-              bottomLeft: Radius.circular(25),
-              bottomRight: Radius.circular(25)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 3,
-              blurRadius: 4,
-              offset: Offset(0, 2), // changes position of shadow
-            ),
-          ]),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Center(
-                child: Text(
-              "Our card details ",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                  color: Colors.white),
-            )),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Name : ",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "Card Number :",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "CVV :",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "ExpiryMonth/expiryYear :",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
-              "Type :",
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

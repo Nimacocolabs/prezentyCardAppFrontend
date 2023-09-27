@@ -6,14 +6,14 @@ class CardBloc {
 
   late CardRepository _repository;
 
-  AuthBloc() {
+  CardBloc() {
     _repository = CardRepository();
   }
 
   Future<CardFetchResponse> getCardDeatils(String card_number) async {
     try {
       CardFetchResponse response = await _repository.cardFetchDetails(card_number);
-      print("->${response}");
+      print("Response->${response}");
       return  response;
     } catch (e, s) {
       Completer().completeError(e, s);

@@ -14,7 +14,7 @@ class CardRepository {
 
   Future<CardFetchResponse> cardFetchDetails(String card_number) async {
     final response =
-    await apiClient.getJsonInstanceAuth(UserDetails.apiToken).post(Apis.cardFetchDetails, data: {"card_number":card_number});
+    await apiClient.getJsonInstance().post(Apis.cardFetchDetails, data: {"card_number":card_number});
     print("Response->${response.data }");
     return CardFetchResponse.fromJson(response.data);
   }
