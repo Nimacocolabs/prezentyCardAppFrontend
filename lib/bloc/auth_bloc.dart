@@ -8,13 +8,10 @@ class AuthBloc {
   AuthBloc() {
     _repository = AuthRepository();
   }
-
   Future<UserSignupResponse> userRegistration(String body) async {
-    print("Sign Up ${body}");
     try {
-      UserSignupResponse response = await _repository.registerUser(body);
-      print("->${response}");
-      return  response;
+      UserSignupResponse response = await _repository!.registerUser(body);
+      return response;
     } catch (e, s) {
       Completer().completeError(e, s);
       throw e;
@@ -32,5 +29,15 @@ class AuthBloc {
       throw e;
     }
   }
-
+  Future<UserSignupResponse> reset(String body) async {
+    print("Sign Up ${body}");
+    try {
+      UserSignupResponse response = await _repository.resetUserPassword(body);
+      print("->${response}");
+      return  response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      throw e;
+    }
+  }
 }

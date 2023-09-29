@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:prezenty_card_app/bloc/auth_bloc.dart';
+import 'package:prezenty_card_app/models/user_signup_response.dart';
 import 'package:prezenty_card_app/network/api_provider.dart';
 import 'package:prezenty_card_app/network/apis.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/utils/shared_prefs.dart';
 import 'reset_password_screen.dart';
 
 
@@ -28,18 +33,22 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
   @override
 
 
-
+  final AuthBloc _authBloc = AuthBloc();
   AuthRepository() {
     apiClient = ApiProvider();
   }
   Future VerifyOtp() async {
+    Map<String, dynamic> body = {};
+    body["email"] = Get.arguments;
+    body["token"] = otp;
 
-    final response =
-    await apiClient.getJsonInstance().post(Apis.verifyOtp, data: {"email":Get.arguments,"token":otp});
+        UserSignupResponse response =
+    await _authBloc.reset(json.encode(body));
     if(response.statusCode == 200){
-      toastMessage("Verified");
+      toastMessage('Login Successfully');
+      await SharedPrefs.logIn(response);
 
-      Get.to(() => ResetPasswordScreen());
+      Get.to(() => const ResetPasswordScreen());
     }else{
       toastMessage("Enter email has some issue ");
     }
