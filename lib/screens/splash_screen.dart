@@ -2,8 +2,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:prezenty_card_app/screens/login_screen.dart';
+import 'package:prezenty_card_app/screens/navigation_screen.dart';
+import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/utils/shared_prefs.dart';
+import 'package:prezenty_card_app/utils/user.dart';
 
 class SplashScreen extends StatefulWidget {
   final bool isFromLogout;
@@ -21,10 +26,29 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(
-        Duration(seconds:5),
-            () => Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => LoginScreen())));
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      setScreenDimensions(context);
+
+      setState(() {});
+
+      if (UserDetails.apiToken.isEmpty) await SharedPrefs.init();
+      await SharedPrefs.init();
+
+      Future.delayed(Duration(milliseconds: 1400), () {
+        if (UserDetails.apiToken != '') {
+          print("role___________" + UserDetails.apiToken);
+
+            return Get.offAll(() => NavigationScreen());
+        } else {
+          return Get.offAll(() => LoginScreen());
+        }
+      });
+    });
+    // Timer(
+    //     Duration(seconds:5),
+    //         () => Navigator.pushReplacement(
+    //         context, MaterialPageRoute(builder: (context) => LoginScreen())));
   }
 
   @override

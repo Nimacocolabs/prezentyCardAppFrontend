@@ -1,9 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:get/get.dart';
+import 'package:prezenty_card_app/bloc/auth_bloc.dart';
+import 'package:prezenty_card_app/models/user_signup_response.dart';
+import 'package:prezenty_card_app/screens/forgot_password_screen.dart';
 import 'package:prezenty_card_app/screens/navigation_screen.dart';
 import 'package:prezenty_card_app/screens/signup_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/utils/shared_prefs.dart';
+import 'package:prezenty_card_app/utils/string_validator.dart';
+import 'package:prezenty_card_app/widgets/app_dailogs.dart';
 import 'package:prezenty_card_app/widgets/app_text_box.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextFieldControl _textFieldControlEmail = TextFieldControl();
   TextFieldControl _textFieldControlPassword = TextFieldControl();
 
+  AuthBloc _authBloc = AuthBloc();
   DateTime? currentBackPressTime;
 
   @override
@@ -84,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 height: 20,
                               ),
                               Text(
-                                'Email address',
+                                'Email or Phone number',
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 16,
@@ -93,8 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppTextBox(
                                 textFieldControl: _textFieldControlEmail,
                                 prefixIcon: Icon(Icons.email_outlined),
-                                hintText: 'Email',
-                                keyboardType: TextInputType.emailAddress,
+                                hintText: 'Email or Phone Number',
+                                // keyboardType: TextInputType.values,
                               ),
                               SizedBox(
                                 height: 10,
@@ -116,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               Align(
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Get.to(() => ForgotPasswordScreen());
+                                  },
                                   child: Text("Forgot Password"),
                                 ),
                               ),
@@ -139,8 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     onTap: () {
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => NavigationScreen()));
-                                      // Get.to(() => NavigationScreen());
+                                      _validate();
                                     }
                                     // _validate,
                                     ),
@@ -181,8 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
-                        onTap: () async{
-                         await Get.to(() => SignUpScreen());
+                        onTap: () {
+                          Get.to(() => SignUpScreen());
                         }),
                   ),
                 ],
@@ -194,47 +205,43 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // _validate() {
-  //   FocusScope.of(context).unfocus();
-  //   String email = _textFieldControlEmail.controller.text.trim();
-  //   String password = _textFieldControlPassword.controller.text;
-  //
-  //   if (!email.isValidEmail()) {
-  //     toastMessage('Please provide a valid email address');
-  //     _textFieldControlEmail.focusNode.requestFocus();
-  //   } else if (!password.isValidPassword()['isValid']) {
-  //     toastMessage(password.isValidPassword()['message']);
-  //     _textFieldControlPassword.focusNode.requestFocus();
-  //   } else {
-  //     _login(email, password);
-  //   }
-  // }
+  _validate() {
+    FocusScope.of(context).unfocus();
+    String emailorphone = _textFieldControlEmail.controller.text.trim();
+    String password = _textFieldControlPassword.controller.text;
 
-  // Future _login(String email, String password) async {
-  //   AppDialogs.loading();
-  //
-  //   Map<String, dynamic> body = {};
-  //   body["email"] = email;
-  //   body["password"] = password;
-  //
-  //   try {
-  //     UserSignUpResponse response = await _authBloc.login(json.encode(body));
-  //     Get.back();
-  //     if (response.success!) {
-  //       await SharedPrefs.logIn(_isRememberMeChecked, response);
-  //       if (widget.isFromWoohoo) {
-  //         Get.close(1);
-  //       } else {
-  //         goToHomeScreen(showCheckMpin:false);
-  //         // Get.offAll(() => MainScreen());
-  //       }
-  //     } else {
-  //       toastMessage('${response.message!}');
-  //     }
-  //   } catch (e, s) {
-  //     Completer().completeError(e, s);
-  //     Get.back();
-  //     toastMessage('Something went wrong. Please try again');
-  //   }
-  // }
+    if (!emailorphone.isValidEmail() && !emailorphone.isValidMobileNumber()) {
+      toastMessage('Please provide a valid email address or phone number');
+      _textFieldControlEmail.focusNode.requestFocus();
+    } else if (!password.isValidPassword()['isValid']) {
+      toastMessage(password.isValidPassword()['message']);
+      _textFieldControlPassword.focusNode.requestFocus();
+    } else {
+      _login(emailorphone, password);
+    }
+  }
+
+  Future _login(String email, String password) async {
+    AppDialogs.loading();
+
+    Map<String, dynamic> body = {};
+    body["user_name"] = email;
+    body["password"] = password;
+
+    try {
+      UserSignupResponse response =
+          await _authBloc.userLogin(json.encode(body));
+      if (response.statusCode == 200) {
+        toastMessage('Login Successfully');
+        await SharedPrefs.logIn(response);
+        Get.offAll(() => NavigationScreen());
+      } else {
+        toastMessage('${response.message!}');
+      }
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      Get.back();
+      toastMessage('Something went wrong. Please try again');
+    }
+  }
 }

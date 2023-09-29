@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/utils/user.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -83,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                           alignment: FractionalOffset.center,
                           child: Text(
-                            "Name",
+                            "${UserDetails.userName}",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -113,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(width: 10,),
                               Expanded(
                                 child: Text(
-                                  "Email",
+                                  "${UserDetails.userEmail}",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -141,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(width: 10,),
                               Expanded(
                                 child: Text(
-                                  "Phone Number",
+                                  "${UserDetails.userMobile}",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -169,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(width: 10,),
                               Expanded(
                                 child: Text(
-                                  "Employee Id",
+                                  "Employee Id : ${UserDetails.userEmpId}",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -182,31 +183,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ],
                           ),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0),
-                            ),
-                            primary: Colors.transparent,
-                            elevation: 0.0,
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            side: BorderSide(
-                              width: 2.0,
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          onPressed: () async {
-                          },
-                          child: Text(
-                            "Edit",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: primaryColor,
-                                fontSize: 16,
-                                fontFamily: 'roboto',
-                                fontWeight: FontWeight.w700),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                          alignment: FractionalOffset.center,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.store,
+                                color: Colors.white,
+                                size: 26,
+                              ),
+                              SizedBox(width: 10,),
+                              Expanded(
+                                child: Text(
+                                  "Store Id : ${UserDetails.userStoreId}",
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.0),
+                                ),
+                                flex: 1,
+                              ),
+                            ],
                           ),
                         ),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //     shape: RoundedRectangleBorder(
+                        //       borderRadius: new BorderRadius.circular(10.0),
+                        //     ),
+                        //     primary: Colors.transparent,
+                        //     elevation: 0.0,
+                        //     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        //     side: BorderSide(
+                        //       width: 2.0,
+                        //       color: Colors.transparent,
+                        //     ),
+                        //   ),
+                        //   onPressed: () async {
+                        //   },
+                        //   child: Text(
+                        //     "Edit",
+                        //     textAlign: TextAlign.center,
+                        //     style: TextStyle(
+                        //         color: primaryColor,
+                        //         fontSize: 16,
+                        //         fontFamily: 'roboto',
+                        //         fontWeight: FontWeight.w700),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

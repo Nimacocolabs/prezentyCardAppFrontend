@@ -21,4 +21,16 @@ class AuthBloc {
     }
   }
 
+  Future<UserSignupResponse> userLogin(String body) async {
+    print("Sign Up ${body}");
+    try {
+      UserSignupResponse response = await _repository.loginUser(body);
+      print("->${response}");
+      return  response;
+    } catch (e, s) {
+      Completer().completeError(e, s);
+      throw e;
+    }
+  }
+
 }

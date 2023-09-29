@@ -6,6 +6,7 @@ import 'package:prezenty_card_app/screens/about_contact_screen.dart';
 import 'package:prezenty_card_app/screens/home_screen.dart';
 import 'package:prezenty_card_app/screens/profile_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
+import 'package:prezenty_card_app/utils/shared_prefs.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({Key? key}) : super(key: key);
@@ -53,7 +54,7 @@ final items=<Widget>[
         elevation: 0,
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20,top: 10,bottom: 5),
+            padding: const EdgeInsets.only(right: 10,top: 10,bottom: 5),
             child: CircleAvatar(
               backgroundColor: Colors.black87,
               radius: 25,
@@ -82,6 +83,53 @@ final items=<Widget>[
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10,top: 10,bottom: 5),
+            child: CircleAvatar(
+              backgroundColor: Colors.black87,
+              radius: 25,
+              child: InkWell(
+                onTap: (){
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text(
+                          'Are you sure want to log out?',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        actions: [
+                          OutlinedButton(
+                            child: Text('No'),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          ElevatedButton(
+                            child: Text('Yes'),
+                            onPressed: () {
+                              Get.back();
+                              SharedPrefs.logOut();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black12,
+                    ),
+                  child: Icon(Icons.login_rounded,color: Colors.white,),
+                  ),
+              ),
+            ),
+          ),
         ],
         title: Text(appBarTitle[_selectedIndex],
               style: TextStyle(
@@ -91,7 +139,7 @@ final items=<Widget>[
       ),
         // appBar: AppBar(
         //   flexibleSpace: Container(
-        //     decoration: BoxDecoration(
+        //     decoration: BoxDecoration(/
         //       gradient: LinearGradient(
         //         begin: Alignment.topRight,
         //         end: Alignment.bottomLeft,

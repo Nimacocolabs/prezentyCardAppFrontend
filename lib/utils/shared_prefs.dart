@@ -48,7 +48,7 @@ class SharedPrefs {
 
     String token = response.token ?? UserDetails.apiToken;
     User user = response.user!;
-print("->${token}");
+    print("->${token}");
     print("->${user.phone}");
     print("->${user.email}");
     await setString(spToken, '$token');

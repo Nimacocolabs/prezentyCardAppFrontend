@@ -12,11 +12,20 @@ class AuthRepository {
   AuthRepository() {
     apiClient = ApiProvider();
   }
+
   Future<UserSignupResponse> registerUser(String body) async {
     print("->${body}");
     final response =
     await apiClient.getJsonInstance().post(Apis.registerUser, data: body);
     print("Sign Up Response-->${response.data }");
+    return UserSignupResponse.fromJson(response.data);
+  }
+
+  Future<UserSignupResponse> loginUser(String body) async {
+    print("->${body}");
+    final response =
+    await apiClient.getJsonInstance().post(Apis.loginUser, data: body);
+    print("Login Response-->${response.data }");
     return UserSignupResponse.fromJson(response.data);
   }
 }

@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezenty_card_app/network/api_provider.dart';
 import 'package:prezenty_card_app/network/apis.dart';
-import 'package:prezenty_card_app/screens/password_otp_screen.dart';
+import 'package:prezenty_card_app/screens/navigation_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
-import 'package:prezenty_card_app/utils/string_validator.dart';
+import 'package:prezenty_card_app/utils/shared_prefs.dart';
 import 'package:prezenty_card_app/widgets/app_text_box.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
-  const ForgotPasswordScreen({Key? key}) : super(key: key);
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final TextFieldControl _email = TextFieldControl();
-  ApiProvider apiProvider = ApiProvider();
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  final TextFieldControl _password = TextFieldControl();
+  final TextFieldControl _retypePassword = TextFieldControl();
   late ApiProvider apiClient;
+  String otp = '';
+  ApiProvider apiProvider = ApiProvider();
+
   @override
   void initState() {
     super.initState();
@@ -29,13 +32,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     apiClient = ApiProvider();
   }
 
-  Future ForgotPassword() async {
-    final response = await apiClient
-        .getJsonInstance()
-        .post(Apis.forGotPass, data: {"email": _email.controller.text});
+  Future ResetPassword() async {
+    final response =
+        await apiClient.getJsonInstance().post(Apis.resetPassword, data: {
+      "password": _password.controller.text,
+      "password_confirmation": _retypePassword.controller.text
+    });
+    print("ij->${response}");
     if (response.statusCode == 200) {
       toastMessage("An OTP to reset your email is sent to your email address");
-      Get.to(() => PasswordOtpScreen(), arguments: _email.controller.text);
+
+      //  Get.to(() => PasswordOtpScreen(),arguments: _email.controller.text);
     } else {
       toastMessage("Enter email has some issue ");
     }
@@ -43,6 +50,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return response;
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -70,21 +78,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 height: 30,
               ),
               Text(
-                "Enter email address",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10,
+                'Password',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
               ),
               AppTextBox(
-                textFieldControl: _email,
-                prefixIcon: Icon(Icons.email_outlined),
-                hintText: 'Email',
-                keyboardType: TextInputType.emailAddress,
+                textFieldControl: _password,
+                prefixIcon: Icon(Icons.lock_outlined),
+                hintText: 'Password',
+                obscureText: true,
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Text(
+                'Retype Password',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+              AppTextBox(
+                textFieldControl: _retypePassword,
+                prefixIcon: Icon(Icons.lock_outlined),
+                hintText: 'Password',
+                obscureText: true,
                 textInputAction: TextInputAction.done,
               ),
               SizedBox(
-                height: 10,
+                height: 20,
               ),
               Center(
                 child: Material(
@@ -93,18 +117,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   child: InkWell(
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Container(
-                      width: 130,
+                      width: 160,
                       padding: EdgeInsets.all(14),
                       child: Center(
                         child: Text(
-                          'Send OTP',
+                          'Reset Password',
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ),
                     onTap: () async {
-                      await ForgotPassword();
-
+                      await ResetPassword();
                       // _validate();
                       // Get.back();
                     },
@@ -114,16 +137,5 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ]),
       ),
     );
-  }
-
-  _validate() async {
-    var email = _email.controller.text;
-
-    if (email.isValidEmail() != null) {
-      toastMessage('Please provide a valid email address');
-      _email.focusNode.requestFocus();
-    }
-    // ApiResponse response = await forgotPassword();
-    // return toastMessage(response.message);
   }
 }
