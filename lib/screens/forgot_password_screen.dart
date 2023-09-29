@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezenty_card_app/network/api_provider.dart';
+import 'package:prezenty_card_app/network/apis.dart';
 import 'package:prezenty_card_app/screens/password_otp_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
 import 'package:prezenty_card_app/utils/string_validator.dart';
@@ -14,10 +15,34 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-
   final TextFieldControl _email = TextFieldControl();
   ApiProvider apiProvider = ApiProvider();
+  late ApiProvider apiClient;
   @override
+  void initState() {
+    super.initState();
+    apiClient = ApiProvider(); // Initialize apiClient here
+  }
+
+  @override
+  AuthRepository() {
+    apiClient = ApiProvider();
+  }
+
+  Future ForgotPassword() async {
+    final response = await apiClient
+        .getJsonInstance()
+        .post(Apis.forGotPass, data: {"email": _email.controller.text});
+    if (response.statusCode == 200) {
+      toastMessage("An OTP to reset your email is sent to your email address");
+      Get.to(() => PasswordOtpScreen(), arguments: _email.controller.text);
+    } else {
+      toastMessage("Enter email has some issue ");
+    }
+
+    return response;
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -41,12 +66,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 30,),
+              SizedBox(
+                height: 30,
+              ),
               Text(
                 "Enter email address",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               AppTextBox(
                 textFieldControl: _email,
                 prefixIcon: Icon(Icons.email_outlined),
@@ -62,21 +91,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   borderRadius: const BorderRadius.all(Radius.circular(8)),
                   color: primaryColor,
                   child: InkWell(
-                    borderRadius:
-                    const BorderRadius.all(Radius.circular(8)),
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Container(
                       width: 130,
                       padding: EdgeInsets.all(14),
                       child: Center(
                         child: Text(
                           'Send OTP',
-                          style:
-                          TextStyle(color: Colors.white, fontSize: 16),
+                          style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       ),
                     ),
-                    onTap:(){
-                      Get.to(() => PasswordOtpScreen());
+                    onTap: () async {
+                      await ForgotPassword();
+
                       // _validate();
                       // Get.back();
                     },
@@ -98,5 +126,4 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     // ApiResponse response = await forgotPassword();
     // return toastMessage(response.message);
   }
-
 }

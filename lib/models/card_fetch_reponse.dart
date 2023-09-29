@@ -1,14 +1,19 @@
 class CardFetchResponse {
   bool? status;
   String? message;
-  Card? card;
+  List<Card>? card;
 
   CardFetchResponse({this.status, this.message, this.card});
 
   CardFetchResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    card = json['card'] != null ? new Card.fromJson(json['card']) : null;
+    if (json['card'] != null) {
+      card = <Card>[];
+      json['card'].forEach((v) {
+        card!.add(new Card.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -16,7 +21,7 @@ class CardFetchResponse {
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.card != null) {
-      data['card'] = this.card!.toJson();
+      data['card'] = this.card!.map((v) => v.toJson()).toList();
     }
     return data;
   }

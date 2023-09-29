@@ -1,7 +1,8 @@
 class Apis{
-  static String registerUser = 'user/register';
-  static String loginUser='user/login';
-  static String forGotPass="user/forgot-password";
-
+  static String registerUser = 'users/register';
+  static String loginUser='users/login';
+  static String forGotPass="users/forgot-password";
   static String cardFetchDetails='cards/search';
+  static String verifyOtp = 'users/verify-otp';
+  static String resetPassword = 'users/reset-password';
 }

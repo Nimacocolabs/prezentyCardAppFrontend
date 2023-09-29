@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:prezenty_card_app/network/api_provider.dart';
+import 'package:prezenty_card_app/network/apis.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
 import 'reset_password_screen.dart';
 
@@ -14,8 +16,36 @@ class PasswordOtpScreen extends StatefulWidget {
 }
 
 class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
-
+  late ApiProvider apiClient;
   String otp = '';
+  ApiProvider apiProvider = ApiProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    apiClient = ApiProvider(); // Initialize apiClient here
+  }
+  @override
+
+
+
+  AuthRepository() {
+    apiClient = ApiProvider();
+  }
+  Future VerifyOtp() async {
+
+    final response =
+    await apiClient.getJsonInstance().post(Apis.verifyOtp, data: {"email":Get.arguments,"token":otp});
+    if(response.statusCode == 200){
+      toastMessage("Verified");
+
+      Get.to(() => ResetPasswordScreen());
+    }else{
+      toastMessage("Enter email has some issue ");
+    }
+
+    return response;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +83,7 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
               fieldStyle: FieldStyle.box,
               onCompleted: (pin) {
                 otp = pin;
+                print("pin->${otp}");
               },
             ),
             SizedBox(
@@ -76,8 +107,8 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
                       ),
                     ),
                   ),
-                  onTap:(){
-                    Get.to(() => ResetPasswordScreen());
+                  onTap:()async{
+                   await VerifyOtp();
                     // _validate();
                     // Get.back();
                   },
