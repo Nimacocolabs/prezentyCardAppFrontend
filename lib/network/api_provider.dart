@@ -6,6 +6,7 @@ import 'package:prezenty_card_app/network/api_interceptor.dart';
 class ApiProvider {
   Dio? _dio;
 
+
   static String baseUrl = 'https://b7ee-59-99-86-191.ngrok-free.app/api/';
 
   ApiProvider() {

@@ -41,7 +41,6 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
     Map<String, dynamic> body = {};
     body["email"] = Get.arguments;
     body["token"] = otp;
-
         UserSignupResponse response =
     await _authBloc.reset(json.encode(body));
     if(response.statusCode == 200){
@@ -117,7 +116,7 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
                     ),
                   ),
                   onTap:()async{
-                   await VerifyOtp();
+                    await VerifyOtp();
                     // _validate();
                     // Get.back();
                   },

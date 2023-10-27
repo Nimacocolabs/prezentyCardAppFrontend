@@ -1,6 +1,3 @@
-
-
-
 import 'package:dio/dio.dart';
 import 'package:prezenty_card_app/models/user_signup_response.dart';
 import 'package:prezenty_card_app/network/api_provider.dart';
@@ -34,4 +31,6 @@ class AuthRepository {
     print("Login Response-->${response.data }");
     return UserSignupResponse.fromJson(response.data);
   }
+
 }
+
