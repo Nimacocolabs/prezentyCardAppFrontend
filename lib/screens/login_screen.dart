@@ -14,7 +14,6 @@ import 'package:prezenty_card_app/utils/shared_prefs.dart';
 import 'package:prezenty_card_app/utils/string_validator.dart';
 import 'package:prezenty_card_app/widgets/app_dailogs.dart';
 import 'package:prezenty_card_app/widgets/app_text_box.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,18 +33,18 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
   }
-  void sendWhatsAppMessage() async {
-    final phoneNumber = '+917012733764'; // Include the country code
-    final encodedMessage = Uri.encodeFull('Your pre-composed message');
-    final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
-
-    if (await canLaunch(whatsappUrl)) {
-      await launch(whatsappUrl);
-    } else {
-      // Handle the error if WhatsApp is not installed
-      print('Could not launch WhatsApp');
-    }
-  }
+  // void sendWhatsAppMessage() async {
+  //   final phoneNumber = '+917012733764'; // Include the country code
+  //   final encodedMessage = Uri.encodeFull('Your pre-composed message');
+  //   final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
+  //
+  //   if (await canLaunch(whatsappUrl)) {
+  //     await launch(whatsappUrl);
+  //   } else {
+  //     // Handle the error if WhatsApp is not installed
+  //     print('Could not launch WhatsApp');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -145,21 +144,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: Text("Forgot Password"),
                                 ),
                               ),
-                              Align(
-                                alignment: AlignmentDirectional.centerEnd,
-                                child: TextButton(
-                                    onPressed: () async {
-                                      var whatsappUrl = Uri.parse(
-                                          "whatsapp://send?phone=${"+91" + "7012733764"}" +
-                                              "&text=${Uri.encodeComponent("Your Message Here")}");
-                                      try {
-                                        launchUrl(whatsappUrl);
-                                      } catch (e) {
-                                        debugPrint(e.toString());
-                                      }},
-                                    child: const Text("Send Message")
-                                )
-                              ),
+                              // Align(
+                              //   alignment: AlignmentDirectional.centerEnd,
+                              //   child: TextButton(
+                              //       onPressed: () async {
+                              //         var whatsappUrl = Uri.parse(
+                              //             "whatsapp://send?phone=${"+91" + "7012733764"}" +
+                              //                 "&text=${Uri.encodeComponent("Your Message Here")}");
+                              //         try {
+                              //           launchUrl(whatsappUrl);
+                              //         } catch (e) {
+                              //           debugPrint(e.toString());
+                              //         }},
+                              //       child: const Text("Send Message")
+                              //   )
+                              // ),
                               Material(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(8)),

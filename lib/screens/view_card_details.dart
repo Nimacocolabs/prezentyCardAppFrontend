@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prezenty_card_app/screens/product_screen.dart';
 import 'package:prezenty_card_app/screens/view_product.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
 import 'package:get/get.dart';
@@ -35,7 +36,8 @@ class _ViewCardDetailsState extends State<ViewCardDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   ElevatedButton(onPressed: () {
-                    Get.to(() =>  PaginatedProductList());
+                    // Get.to(() =>  PaginatedProductList());
+                    Get.to(() =>  ProductScreen());
                   }, child: Text("View Product")),
                   SizedBox(
                     height: 20,
