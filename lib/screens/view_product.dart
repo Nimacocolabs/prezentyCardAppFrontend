@@ -42,20 +42,34 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
       });
     }
   }
-  Future<void> searchData() async {
-    final response = await apiClient
-        .getJsonInstance()
-        .post(nextPageUrl??Apis.ViewProduct, data: {"cardType":"apl","search":_searchController.text});
-    if (response.statusCode == 200) {
-      final data = response.data;
-      nextPageUrl = data['next_page_url'];
-      final List<Data> newProducts =
-      List.from(data['data'].map((item) => Data.fromJson(item)));
-      setState(() {
-        products.addAll(newProducts);
-      });
-    }
-  }
+String query="";
+  // Future<List<Map<String, dynamic>>> performSearchApi() async {
+  //
+  //   final response =
+  //   await apiClient.getJsonInstance().post(Apis.ViewProduct, data: {"cardType":"apl","search":_searchController.text});
+  //   print("res-?${response}");
+  //   if (response.statusCode == 200) {
+  //     final  data = response.data;
+  //     print("ghjh->${data}");
+  //     final List<Map<String, dynamic>> cards = List.from(data['card']);
+  //     return cards;
+  //   } else {
+  //     throw Exception('Failed to load data');
+  //   }
+  // }
+  // void performSearch() async {
+  //   try {
+  //     final results = await performSearchApi();
+  //     print("res->${results}");
+  //     setState(() {
+  //       //searchResults = results;
+  //       //  print("res->${searchResults}");
+  //     });
+  //   } catch (e) {
+  //     print('Error: $e');
+  //   }
+  // }
+
   TextEditingController _searchController = TextEditingController();
   // Future<void> fetchData() async {
   //   if (nextPageUrl == null) {
@@ -81,6 +95,11 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
   //     });
   //   }
   // }
+  List<Data> filterProducts(String query) {
+    return products.where((product) {
+      return product.productName!.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +122,10 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
           ),
         ),
         onChanged: (value) {
-          // Handle search logic here
+          setState(() {
+            query = value;
+          });
+
         },
       ),
     ),
@@ -111,9 +133,9 @@ class _PaginatedProductListState extends State<PaginatedProductList> {
 
           Expanded(
               child: ListView.builder(
-                itemCount: products.length,
+                itemCount:filterProducts(query).length,
                 itemBuilder: (context, index) {
-                  final product = products[index];
+                  final product = filterProducts(query)[index];
                   return ListTile(
                     leading:
                     Padding(
