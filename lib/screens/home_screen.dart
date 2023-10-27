@@ -126,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
                 performSearch(); // Trigger search as you type
               },
+
               decoration:  InputDecoration(
                 prefixIcon: Icon(Icons.search,color: Colors.black87,),
                 labelText: "Search",
