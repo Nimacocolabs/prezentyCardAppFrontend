@@ -76,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Are you sure to view details"),
-          content: Column(
+          title: const Text("Are you sure to view details"),
+          content: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -88,22 +88,20 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: <Widget>[
             Row(mainAxisAlignment: MainAxisAlignment.end,
               children: [
-
-
                 ElevatedButton(
                   onPressed: () {
                     final card = searchResults[index];
-                   Get.to(()=>ViewCardDetails(),arguments: card); // Close the dialog
+                    Get.to(()=>const ViewCardDetails(),arguments: card); // Close the dialog
                   },
                   child: Text("view"),
 
                 ),
-               SizedBox(width: 20,),
+                const SizedBox(width: 20,),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  child: Text("Close"),
+                  child: const Text("Close"),
                 ),
               ],
             ),
@@ -118,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body:  Column(
         children: <Widget>[
+          SizedBox(height: 20,),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: TextField(
               onChanged: (value) {
                 setState(() {
@@ -127,8 +126,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
                 performSearch(); // Trigger search as you type
               },
-              decoration: InputDecoration(
-                labelText: 'Search',
+              decoration:  InputDecoration(
+                prefixIcon: Icon(Icons.search,color: Colors.black87,),
+                labelText: "Search",
+                fillColor: Colors.white,
+                border: new OutlineInputBorder(
+                  borderRadius: new BorderRadius.circular(20.0),
+                  borderSide:  BorderSide(
+                    color: Colors.black87,
+                  ),
+                ),
               ),
             ),
           ),
@@ -151,93 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // SafeArea(
-      //     child: Padding(
-      //   padding: EdgeInsets.all(10.0),
-      //   child: SingleChildScrollView(
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: [
-      //         SizedBox(
-      //           height: MediaQuery.of(context).size.height * 0.04,
-      //         ),
-      //         Text(""),
-      //         Center(
-      //           child: Text(
-      //             "Card Details",
-      //             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-      //           ),
-      //         ),
-      //         SizedBox(
-      //           height: 20,
-      //         ),
-      //         Text(
-      //           'Card Number',
-      //           style: TextStyle(
-      //               color: Colors.black,
-      //               fontSize: 16,
-      //               fontWeight: FontWeight.w500),
-      //         ),
-      //         SizedBox(
-      //           height: 10,
-      //         ),
-      //         AppTextBox(
-      //           textFieldControl: _textFieldControlCardNumber,
-      //           prefixIcon: Icon(Icons.credit_card),
-      //           hintText: 'Card number',
-      //           keyboardType: TextInputType.number,
-      //         ),
-      //         SizedBox(
-      //           height: 20,
-      //         ),
-      //         Center(
-      //           child: Material(
-      //             borderRadius: const BorderRadius.all(Radius.circular(8)),
-      //             color: primaryColor,
-      //             child: InkWell(
-      //               borderRadius: const BorderRadius.all(Radius.circular(8)),
-      //               child: Container(
-      //                 width: 150,
-      //                 padding: EdgeInsets.all(14),
-      //                 child: Center(
-      //                   child: Text(
-      //                     'Submit',
-      //                     style: TextStyle(color: Colors.white, fontSize: 16),
-      //                   ),
-      //                 ),
-      //               ),
-      //               onTap: () async{
-      //                 String card_number = _textFieldControlCardNumber.controller.text.trim();
-      //                 try {
-      //                   CardFetchResponse response = await _bloc.getCardDeatils(card_number);
-      //                   if (response.status == true) {
-      //                     print("Response ==>${response.card}");
-      //                     setState(() {
-      //                       _cardResponse = response;
-      //
-      //                     });
-      //                     toastMessage('submitted');
-      //                   } else {
-      //                     toastMessage('${response.message!}');
-      //                   }
-      //                 } catch (e, s) {
-      //                   Completer().completeError(e, s);
-      //                   Get.back();
-      //                   if()
-      //                   toastMessage('Something went wrong. Please try again');
-      //                 }
-      //               },
-      //             ),
-      //           ),
-      //         ),
-      //         SizedBox(
-      //           height: 20,
-      //         ),
-      //         buildCardDetails(),
-      //       ],
-      //     ),
-      //   ),
-      // )),
+
     );
   }
   buildCardDetails() {

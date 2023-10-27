@@ -94,22 +94,22 @@ final items=<Widget>[
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        content: Text(
+                        content:const Text(
                           'Are you sure want to log out?',
                           style: TextStyle(fontWeight: FontWeight.w500),
                         ),
                         actions: [
                           OutlinedButton(
-                            child: Text('No'),
+                            child:const Text('No'),
                             onPressed: () {
                               Get.back();
                             },
                           ),
-                          SizedBox(
+                        const  SizedBox(
                             width: 8,
                           ),
                           ElevatedButton(
-                            child: Text('Yes'),
+                            child: const Text('Yes'),
                             onPressed: () {
                               Get.back();
                               SharedPrefs.logOut();
@@ -121,11 +121,11 @@ final items=<Widget>[
                   );
                 },
                 child: Container(
-                    decoration: BoxDecoration(
+                    decoration:const  BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.black12,
                     ),
-                  child: Icon(Icons.login_rounded,color: Colors.white,),
+                  child:const Icon(Icons.login_rounded,color: Colors.white,),
                   ),
               ),
             ),
