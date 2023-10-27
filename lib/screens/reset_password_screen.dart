@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:prezenty_card_app/network/api_provider.dart';
 import 'package:prezenty_card_app/network/apis.dart';
+import 'package:prezenty_card_app/screens/login_screen.dart';
 import 'package:prezenty_card_app/screens/navigation_screen.dart';
 import 'package:prezenty_card_app/utils/app_helper.dart';
 import 'package:prezenty_card_app/utils/shared_prefs.dart';
@@ -17,10 +18,10 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextFieldControl _password = TextFieldControl();
   final TextFieldControl _retypePassword = TextFieldControl();
-  late ApiProvider apiClient;
+
   String otp = '';
   ApiProvider apiProvider = ApiProvider();
-
+  late ApiProvider apiClient;
   @override
   void initState() {
     super.initState();
@@ -33,16 +34,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   Future ResetPassword() async {
-    final response =
-        await apiClient.getJsonInstance().post(Apis.resetPassword, data: {
-      "password": _password.controller.text,
-      "password_confirmation": _retypePassword.controller.text
-    });
-    print("ij->${response}");
+    final response = await apiClient
+        .getJsonInstance()
+        .post(Apis.resetPassword, data: {"password":_password.controller.text,"password_confirmation":_retypePassword.controller.text});
     if (response.statusCode == 200) {
       toastMessage("An OTP to reset your email is sent to your email address");
-
-      //  Get.to(() => PasswordOtpScreen(),arguments: _email.controller.text);
+     Get.to(() => LoginScreen(),);
     } else {
       toastMessage("Enter email has some issue ");
     }

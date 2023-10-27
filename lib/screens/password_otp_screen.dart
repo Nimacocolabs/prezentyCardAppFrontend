@@ -41,8 +41,7 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
     Map<String, dynamic> body = {};
     body["email"] = Get.arguments;
     body["token"] = otp;
-
-    UserSignupResponse response =
+        UserSignupResponse response =
     await _authBloc.reset(json.encode(body));
     if(response.statusCode == 200){
       toastMessage('Login Successfully');

@@ -50,7 +50,7 @@
 
 class User {
   String? name;
-  int? storeId;
+  String? storeId;
   String? employeeId;
   String? email;
   String? phone;
