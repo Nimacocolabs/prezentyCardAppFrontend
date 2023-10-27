@@ -88,8 +88,6 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: <Widget>[
             Row(mainAxisAlignment: MainAxisAlignment.end,
               children: [
-
-
                 ElevatedButton(
                   onPressed: () {
                     final card = searchResults[index];
@@ -118,8 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body:  Column(
         children: <Widget>[
+          SizedBox(height: 20,),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),
             child: TextField(
               onChanged: (value) {
                 setState(() {
@@ -127,8 +126,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
                 performSearch(); // Trigger search as you type
               },
-              decoration: InputDecoration(
-                labelText: 'Search',
+              decoration: new InputDecoration(
+                prefixIcon: Icon(Icons.search,color: Colors.black87,),
+                labelText: "Search",
+                fillColor: Colors.white,
+                border: new OutlineInputBorder(
+                  borderRadius: new BorderRadius.circular(20.0),
+                  borderSide:  BorderSide(
+                    color: Colors.black87,
+                  ),
+                ),
               ),
             ),
           ),

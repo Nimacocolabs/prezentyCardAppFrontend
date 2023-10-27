@@ -6,15 +6,13 @@ import 'package:prezenty_card_app/network/api_interceptor.dart';
 class ApiProvider {
   Dio? _dio;
 
-  static String baseUrl = 'https://5843-117-207-174-40.ngrok-free.app/api/';
+  static String baseUrl = 'https://ec3c-117-207-171-129.ngrok-free.app/api/';
 
   ApiProvider() {
     BaseOptions options;
     options = new BaseOptions(
       baseUrl: baseUrl,
       followRedirects: false,
-
-
     // receiveTimeout: 10000,
       // connectTimeout: 10000,
     );

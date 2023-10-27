@@ -1,6 +1,3 @@
-
-
-
 import 'package:dio/dio.dart';
 import 'package:prezenty_card_app/models/user_signup_response.dart';
 import 'package:prezenty_card_app/network/api_provider.dart';
@@ -14,10 +11,9 @@ class AuthRepository {
   }
 
   Future<UserSignupResponse> registerUser(String body) async {
-    print("->${body}");
-    final response =
-    await apiClient.getJsonInstance().post(Apis.registerUser, data: body);
-    print("Sign Up Response-->${response.data }");
+    Response response = await apiClient!
+        .getJsonInstance()
+        .post(Apis.registerUser, data: body);
     return UserSignupResponse.fromJson(response.data);
   }
 
@@ -25,6 +21,13 @@ class AuthRepository {
     print("->${body}");
     final response =
     await apiClient.getJsonInstance().post(Apis.loginUser, data: body);
+    print("Login Response-->${response.data }");
+    return UserSignupResponse.fromJson(response.data);
+  }
+  Future<UserSignupResponse> resetUserPassword(String body) async {
+    print("->${body}");
+    final response =
+    await apiClient.getJsonInstance().post(Apis.verifyOtp, data: body);
     print("Login Response-->${response.data }");
     return UserSignupResponse.fromJson(response.data);
   }
