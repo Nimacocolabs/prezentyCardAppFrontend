@@ -13,7 +13,6 @@ class CardBloc {
   Future<CardFetchResponse> getCardDeatils(String card_number) async {
     try {
       CardFetchResponse response = await _repository.cardFetchDetails(card_number);
-      print("Response->${response}");
       return  response;
     } catch (e, s) {
       Completer().completeError(e, s);

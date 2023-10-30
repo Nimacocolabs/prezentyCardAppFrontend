@@ -7,7 +7,7 @@ class ApiProvider {
   Dio? _dio;
 
 
-  static String baseUrl = 'https://b7ee-59-99-86-191.ngrok-free.app/api/';
+  static String baseUrl = 'https://64ea-117-201-130-70.ngrok-free.app/api/';
 
   ApiProvider() {
     BaseOptions options;

@@ -1,5 +1,4 @@
 class Apis{
-
   static String registerUser = 'employees/register';
   static String loginUser='employees/login';
   static String forGotPass="employees/forgot-password";
@@ -7,5 +6,7 @@ class Apis{
   static String verifyOtp = 'employees/verify-otp';
   static String resetPassword = 'employees/reset-password';
   static String ViewProduct = "products/list";
+  static String ViewDealsProduct="products/hot-deals";
+  static String ViewOfferssProduct="products/offers";
 
 }

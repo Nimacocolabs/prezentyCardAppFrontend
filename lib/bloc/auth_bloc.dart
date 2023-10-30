@@ -33,7 +33,6 @@ class AuthBloc {
     print("Sign Up ${body}");
     try {
       UserSignupResponse response = await _repository.resetUserPassword(body);
-      print("->${response}");
       return  response;
     } catch (e, s) {
       Completer().completeError(e, s);
