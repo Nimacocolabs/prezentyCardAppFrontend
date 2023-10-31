@@ -54,7 +54,6 @@ class _OffersProductListState extends State<OffersProductList> {
 
   TextEditingController _searchController = TextEditingController();
 
-
   List<Data> filterProducts(String query) {
     return products.where((product) {
       return product.productName!.toLowerCase().contains(query.toLowerCase());
