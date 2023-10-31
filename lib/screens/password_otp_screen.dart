@@ -47,7 +47,7 @@ class _PasswordOtpScreenState extends State<PasswordOtpScreen> {
       toastMessage('Login Successfully');
       await SharedPrefs.logIn(response);
 
-      Get.to(() => const ResetPasswordScreen());
+      Get.to(() =>  ResetPasswordScreen());
     }else{
       toastMessage("Enter email has some issue ");
     }

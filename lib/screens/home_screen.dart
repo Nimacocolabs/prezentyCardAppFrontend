@@ -22,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextFieldControl _textFieldControlCardNumber = TextFieldControl();
   CardBloc _bloc = CardBloc();
   CardFetchResponse? _cardResponse;
   String query = '';
@@ -47,10 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final response =
     await apiClient.getJsonInstance().post(Apis.cardFetchDetails, data: {"search":query});
-    print("res-?${response}");
     if (response.statusCode == 200) {
       final  data = response.data;
-      print("ghjh->${data}");
       final List<Map<String, dynamic>> cards = List.from(data['card']);
       return cards;
     } else {
@@ -71,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void showCardDetails(int index) {
-    final card = searchResults[index];
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -91,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ElevatedButton(
                   onPressed: () {
                     final card = searchResults[index];
-                    Get.to(()=>const ViewCardDetails(),arguments: card); // Close the dialog
+                    Get.to(()=>ViewCardDetails(),arguments: card); // Close the dialog
                   },
                   child: Text("view"),
 
@@ -146,15 +142,24 @@ class _HomeScreenState extends State<HomeScreen> {
               itemCount: searchResults.length,
               itemBuilder: (context, index) {
                 final card = searchResults[index];
-                return ListTile(
-                  title: Text("User Name: ${card['user_name']}"),
-                  subtitle: Text("Card Number: ${card['card_number']}"),
-                  onTap: () {
-                    showCardDetails(index); // Show card details when tapped
-                  },
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10), // Adjust margin as needed
+                  decoration: BoxDecoration(
+                    color: secondaryColor.shade500, // Change the background color of the container
+                    borderRadius: BorderRadius.circular(20), // Change the shape (circular in this example)
+                  ),
+                  child: ListTile(
+                    title: Text("Name : ${card['user_name']}",style: TextStyle(color: Colors.white),),
+                    subtitle: Text("Card Number : ${card['card_number']}",style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      showCardDetails(index);
+                    },
+                  ),
                 );
               },
-            ),
+            )
+
+
 
           ),
         ],
